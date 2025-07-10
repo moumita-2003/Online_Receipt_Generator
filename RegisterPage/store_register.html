@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store_Register</title>
+  <link rel="stylesheet" href="../styles/style2.css">
+  <script>
+    function registerEmployee(event) {
+      event.preventDefault(); // Prevent form from submitting normally
+      // Validate all fields
+      let isValid = true;
+      const nameInput = document.getElementById("store-name").value;
+
+      // Create a new AJAX request
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "register2.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Store the response message
+          const responseMessage = xhr.responseText;
+
+          // Display an alert with the response message
+          alert(responseMessage);
+
+          // Check if the response indicates success and redirect
+          if (responseMessage.includes("successfully")) {
+            window.location.href = "register.html"; // Redirect to success page if successful
+          }
+        }
+      };
+
+      // Send the request with form data
+      xhr.send("store-name=" + encodeURIComponent(Id));
+    }
+  </script>
+  
+</head>
+<body>
+  <div class="container">
+    <h2>Register Store</h2>
+
+    <form action="store_register2.php" method="POST">
+    <div class="form-group">
+      <label for="store-name">Store Name:</label>
+      <input type="text" id="store-name" name="store-name" required>
+      <div class="precondition">Precondition: Store Name must be unique.</div>
+      <div class="error-message" id="nameError">The Store Name already exists.</div>
+    </div>
+      
+    <div class="form-group">
+      <label for="store-address">Store Address:</label>
+      <input type="text" id="store-address" name="store-address">
+    </div>
+    <div class="buttons">
+      <button type="submit" class="submit-btn" >Register Store</button>
+    </div>
+    </form>
+  </div>
+  <script>
+    function storeInput() {
+      const input = document.getElementById("userInput").value;
+      localStorage.setItem("store-name", input);
+      window.location.href = "register3.php";
+    }
+  </script>
+</body>
+</html>

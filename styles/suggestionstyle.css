@@ -1,0 +1,19 @@
+/* Styling for the autocomplete suggestions */
+#suggestions {
+    border: 1px solid #ccc;
+    position: absolute; /* Ensure it's positioned correctly */
+    background-color: white;
+    z-index: 1000; /* Make sure it appears above other elements */
+    width: 300px; /* Match the input width */
+    max-height: 150px; /* Limit height */
+    overflow-y: auto; /* Add scrolling if needed */
+}
+
+.suggestion {
+    padding: 8px; /* Add padding for better spacing */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+.suggestion:hover {
+    background-color: #f0f0f0; /* Highlight on hover */
+}

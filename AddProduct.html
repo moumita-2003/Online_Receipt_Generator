@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Information Management</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script>
+    // On page load, set the bill number from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const billNo = urlParams.get('id');
+    const storename = urlParams.get('sname');
+    console.log(storename);
+    console.log(billNo);
+    window.onload = function() {
+      document.getElementById("bill-no").value = billNo;
+      document.getElementById("store-name").value = storename;
+      loadProducts(); // Load existing products for this bill number
+    };
+
+    // Add product to database and table
+    function handleAddProduct() {
+      const productName = document.getElementById("product-name").value;
+      const productPrice = parseFloat(document.getElementById("product-price").value);
+      const productGST = parseFloat(document.getElementById("product-gst").value);
+      const productQuantity = parseInt(document.getElementById("product-quantity").value);
+
+      // AJAX request to add the product
+      fetch('AddProduct.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          billNo,
+          productName,
+          productPrice,
+          productGST,
+          productQuantity
+        })
+      })
+      .then(response => response.json())
+      .then(product => {
+        addProductToTable(product); // Add product to the table on the page
+        updateTotalAmount();
+        clearForm();
+      });
+    }
+
+    // Load existing products from database
+    function loadProducts() {
+      fetch(`LoadProducts.php?billNo=${billNo}`)
+        .then(response => response.json())
+        .then(products => {
+          products.forEach(addProductToTable);
+          updateTotalAmount();
+        });
+    }
+
+    // Add a product to the HTML table
+    function addProductToTable(product) {
+      const tableBody = document.querySelector("#product-table tbody");
+      const row = document.createElement("tr");
+      row.dataset.id = product.id;
+
+      row.innerHTML = `
+        <td>${product.product_name}</td>
+        <td>${product.product_price}</td>
+        <td>${product.product_gst}</td>
+        <td>${product.product_quantity}</td>
+        <td>${(product.product_price * product.product_quantity * (1 + product.product_gst / 100)).toFixed(2)}</td>
+        <td><button onclick="removeProduct(${product.id}, this)">Remove</button></td>
+      `;
+      tableBody.appendChild(row);
+    }
+
+    // Remove a product from the database and table
+    // Remove a product from the database and table
+function removeProduct(productId, button) {
+    fetch(`DeleteProduct.php?billNo=${billNo}&id=${productId}`, { method: 'GET' })
+        .then(response => response.text())  // Expecting plain text response
+        .then(responseText => {
+            console.log(responseText);  // You can log the response if needed
+            /*if (responseText === "Product removed and total updated.") {
+                button.closest("tr").remove();  // Remove product from the table
+                updateTotalAmount();  // Update the total amount displayed on the page
+            } else {
+                alert("There was an error: " + responseText);
+            }*/
+            button.closest("tr").remove();  // Remove product from the table
+            updateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error("Error during fetch:", error);
+        });
+}
+
+
+    // Update the total amount displayed
+    function updateTotalAmount() {
+      let total = 0;
+      document.querySelectorAll("#product-table tbody tr").forEach(row => {
+        const totalCell = row.querySelector("td:nth-child(5)");
+        total += parseFloat(totalCell.textContent);
+      });
+      document.getElementById("total-amount").textContent = total.toFixed(2);
+    }
+    function generateBill() {
+  // Calculate total amount from the table
+  let total = 0;
+  document.querySelectorAll("#product-table tbody tr").forEach(row => {
+    const totalCell = row.querySelector("td:nth-child(5)");
+    total += parseFloat(totalCell.textContent);
+  });
+
+  // Update the total in the bills table in the database
+  fetch('UpdateBillTotal.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      billNo: billNo, // The bill number from URL parameter
+      totalAmount: total.toFixed(2) // Round to 2 decimal places
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      alert('Bill generated successfully!');
+      document.getElementById("total-amount").textContent = total.toFixed(2); // Update displayed total
+    } else {
+      alert('Error updating bill total.');
+    }
+  })
+  .catch(error => {
+    alert('An error occurred: ' + error);
+  });
+}
+
+    // Clear the form inputs
+    function clearForm() {
+      document.getElementById("product-name").value = '';
+      document.getElementById("product-price").value = '';
+      document.getElementById("product-gst").value = '';
+      document.getElementById("product-quantity").value = '';
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+  
+    <form id="billing-form" onsubmit="event.preventDefault(); handleAddProduct();">
+      <h2>Add Product</h2>
+      <div class="info-section">
+      <div class="input-group">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" name="product-name" required>
+      </div>
+      <div class="input-group">
+        <label for="product-price">Price:</label>
+        <input type="number" id="product-price" name="product-price" required>
+      </div>
+      <div class="input-group">
+        <label for="product-gst">GST (%):</label>
+        <input type="number" id="product-gst" name="product-gst" required>
+      </div>
+      <div class="input-group">
+        <label for="product-quantity">Quantity:</label>
+        <input type="number" id="product-quantity" name="product-quantity" required>
+      </div>
+      
+    </div>
+    <button type="submit">Add Product</button>
+    <br>
+    </form>
+    
+    
+    <table id="product-table">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>GST</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </form>
+  <br>
+  <br>
+  
+    <form id="billing-form" action="proceed.php" method="POST">
+      <div class="info-section">
+      <div class="input-group">
+        <label for="bill-no">Bill No:</label>
+        <input type="text" id="bill-no" name="bill-no" readonly required>
+      </div>
+      
+      <div class="input-group">
+        <label for="store-name">Store Name:</label>
+        <input type="text" id="store-name" name="store-name" readonly required>
+      </div>
+      <div class="total-billing">
+        <h2>Total Billing Amount: $<span id="total-amount">0.00</span></h2>
+      </div>
+    </div>
+      <button type="submit">Proceed</button>
+    </form>
+  </div>
+    
+  
+</body>
+</html>

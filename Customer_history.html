@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="styles/style2.css">
+  <script>
+    // Get the 'data' parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const data = urlParams.get('id');
+    console.log(data); // Outputs: example
+    window.onload = function() {
+            // Step 3: Select the input field
+            const inputField = document.getElementById("username");
+
+            // Step 4: Set the input field's value to the constant value
+            inputField.value =data;
+            console.log(data)
+        };
+  </script>
+</head>
+<body>
+  <div class="container">
+  <h2>Buying History</h2>
+  <br>
+    <form action="view_history.php" method="POST">
+      <div class="form-group">
+       <div class="form-group">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" placeholder="Autofilled">
+  </div> 
+<br>
+      <div class="buttons">
+          <button type="submit" class="submit-btn" >View History</button>
+      </div>
+      
+  </div>
+</form> 
+
+
+</body>
+</html>

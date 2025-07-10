@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Information Management</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/suggestionstyle.css">
+  <script>
+    // Function to set the default date and time to the current system date and time
+    function setCurrentDateTime() {
+        
+    }
+
+    // Set the current date and time when the page loads
+    
+   //part-2
+    // Get the 'data' parameter from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    //const username = urlParams.get('username');
+    const store_name = urlParams.get('sname');
+    console.log(store_name); // Outputs: example
+    window.onload = function() {
+            // Step 3: Select the input field
+            //const inputField1 = document.getElementById("Receiptant-name");
+            const now = new Date(); // Get the current date and time
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        // Format the date as YYYY-MM-DDTHH:MM
+        const datetimeLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+        document.getElementById('datetimeField').value = datetimeLocal; // Set the default value
+            const inputField2 = document.getElementById("store-name");
+            
+            // Step 4: Set the input field's value to the constant value
+            inputField2.value =store_name;
+            
+        };
+        //window.onload = 
+ 
+</script>
+  
+</head>
+<body>
+  <div class="container">
+    <h1>Product Information Management</h1>
+    
+      <br>
+      <br>
+<div id="suggestions" style="display: none;"></div>
+    
+    <form id="billing-form" action="billing.php" method="POST">
+      <div class="info-section">
+        <div class="input-group">
+            <label for="store-name">Store Name:</label>
+            <input type="text" id="store-name" name="store-name" placeholder="Autofilled">
+        </div>
+        <div class="input-group">
+          <label for="datetimeField">Select Date and Time:</label>
+          <input type="datetime-local" id="datetimeField" name="datetimeField" required>
+      </div>
+        <div class="input-group">
+          <label for="customer-name">Customer Name:</label>
+          <input type="text" id="customer-name" name="customer-name" required>
+        </div>
+        <div class="input-group">
+          <label for="customer-email">Customer Email:</label>
+          <input type="email" id="customer-email" name="customer-email" required>
+        </div>
+        
+        
+      </div>
+     
+
+      <button type="submit" >Submit</button>
+    </form>
+  </div>
+  
+</body>
+</html>

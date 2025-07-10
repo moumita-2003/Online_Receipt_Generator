@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+.container {
+    width: 50%;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+input[type="text"], input[type="email"], textarea {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.precondition, .error-message {
+    font-size: 0.9em;
+    color: gray;
+    margin-top: 5px;
+}
+.error-message {
+    color: red;
+    display: none;
+}
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.submit-btn {
+    background-color: #007bff;
+    color: white;
+}
+.cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
+.confirmation {
+    text-align: center;
+    margin-top: 20px;
+    color: green;
+    display: none;
+}
