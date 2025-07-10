@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form - Online Receipt Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            width: 50%;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .precondition, .error-message {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 5px;
+        }
+        .error-message {
+            color: red;
+            display: none;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .confirmation {
+            text-align: center;
+            margin-top: 20px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Feedback Form</h1>
+        
+        <!-- Feedback Form -->
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <div class="precondition">Precondition: Only alphabetic characters are allowed.</div>
+                <div class="error-message" id="nameError">Please enter a valid name with alphabetic characters only.</div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <div class="precondition">Precondition: Must be a valid email format (e.g., user@example.com).</div>
+                <div class="error-message" id="emailError">Please enter a valid email address.</div>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating (1 to 5):</label>
+                <input type="text" id="rating" name="rating" required>
+                <div class="precondition">Precondition: Must be a whole number between 1 and 5.</div>
+                <div class="error-message" id="ratingError">Please enter a valid rating between 1 and 5.</div>
+            </div>
+            <div class="form-group">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" rows="4"></textarea>
+                <div class="precondition">Precondition: At least 10 characters required.</div>
+                <div class="error-message" id="commentsError">Please enter at least 10 characters for comments.</div>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="submit-btn">Submit</button>
+                <button type="button" class="cancel-btn" onclick="clearForm()">Cancel</button>
+            </div>
+        </form>
+
+        <div id="confirmationMessage" class="confirmation">
+            Thank you for your feedback!
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Validate all fields
+            let isValid = true;
+
+            // Name validation: only alphabetic characters
+            const nameInput = document.getElementById("name").value;
+            const nameError = document.getElementById("nameError");
+            if (!/^[A-Za-z\s]+$/.test(nameInput)) {
+                nameError.style.display = "block";
+                isValid = false;
+            } else {
+                nameError.style.display = "none";
+            }
+
+            // Email validation
+            const emailInput = document.getElementById("email").value;
+            const emailError = document.getElementById("emailError");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                emailError.style.display = "block";
+                isValid = false;
+            } else {
+                emailError.style.display = "none";
+            }
+
+            // Rating validation: must be a whole number between 1 and 5
+            const ratingInput = document.getElementById("rating").value;
+            const ratingError = document.getElementById("ratingError");
+            if (!/^[1-5]$/.test(ratingInput)) {
+                ratingError.style.display = "block";
+                isValid = false;
+            } else {
+                ratingError.style.display = "none";
+            }
+
+            // Comments validation: at least 10 characters
+            const commentsInput = document.getElementById("comments").value;
+            const commentsError = document.getElementById("commentsError");
+            if (commentsInput.length < 10) {
+                commentsError.style.display = "block";
+                isValid = false;
+            } else {
+                commentsError.style.display = "none";
+            }
+
+            // If all fields are valid, display confirmation message and reset the form
+            const confirmationMessage = document.getElementById("confirmationMessage");
+            if (isValid) {
+                confirmationMessage.style.display = "block";
+                document.getElementById("feedbackForm").reset();
+            } else {
+                confirmationMessage.style.display = "none";
+            }
+        });
+
+        // Clear form and hide all error and confirmation messages
+        function clearForm() {
+            document.getElementById("feedbackForm").reset();
+            document.getElementById("nameError").style.display = "none";
+            document.getElementById("emailError").style.display = "none";
+            document.getElementById("ratingError").style.display = "none";
+            document.getElementById("commentsError").style.display = "none";
+            document.getElementById("confirmationMessage").style.display = "none";
+        }
+    </script>
+</body>
+</html>
+
